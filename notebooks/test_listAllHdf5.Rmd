@@ -1,0 +1,82 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+## Copy Hdf5 file to user folder
+
+```{r}
+source_dir <- system.file("extdata", package = "rNodal")
+source_dir
+
+source_file <- paste(source_dir, "default.h5", sep = "/")
+source_file
+
+stopifnot(file.exists(source_file))
+
+target_dir <- getwd()
+target_dir <- rprojroot::find_rstudio_root_file()
+target_dir
+
+file.copy(from = source_file, to = target_dir, overwrite = TRUE)
+
+```
+
+
+## Test that hdf5 files are found (or not found) anywhere in the user project folder.
+
+```{r}
+library(rNodal)
+biggerHdf5()
+```
+
+```{r}
+library(rNodal)
+fileInfoHdf5()
+```
+
+
+
+```{r}
+library(rNodal)
+listAllHdf5()
+isHdf5Files()
+```
+
+```{r}
+user_project_folder <- rprojroot::find_rstudio_root_file()
+user_project_folder
+```
+
+
+```{r}
+if (!isHdf5Files()) warning("No h5 files")
+```
+
+
+```{r}
+if (isHdf5Files()) cat("there are H5 files")
+```
+
+
+```{r}
+hdf5_files <- listAllHdf5()
+hdf5_files
+```
+
+```{r}
+full_hdf5_files <- as.vector(sapply(user_project_folder, paste, hdf5_files, sep = "/"))
+# names(full_hdf5_files) <- "hdf5_files"
+full_hdf5_files
+```
+
+
+```{r}
+h5_file_size <- sapply(full_hdf5_files, file.size)
+```
+
+```{r}
+getwd()
+file.info("default.h5")
+```
+
